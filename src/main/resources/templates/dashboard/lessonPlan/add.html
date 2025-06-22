@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/lessonPlan.css}"/>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+
+                <div class="d-flex gap-10 py-1 align-items-start">
+                    <div onclick="goBack()" class="btn btn-sm btn-primary"> &#x2190</div>
+                    <div class="h3">Lesson Plan</div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h1 class="h3 mb-2 text-gray-800"> Add Lesson Plan </h1>
+                                <form method="post"
+                                      th:action="${isUpdate} ? @{/lessonPlan/update/{lessonPlanId}(lessonPlanId=${lessonPlan.id})} : @{/lessonPlan/add}"
+                                      th:object="${lessonPlan}"
+                                      enctype="multipart/form-data" autocomplete="off">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="lessonPlan">Name:</label>
+                                            <input type="text" id="lessonPlan" class="form-control" name="lessonPlan"
+                                                   placeholder="write lesson plan"
+                                                   th:field="*{lessonPlanName}" required>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label" for="subjectId">Subject:</label>
+                                            <select id="subjectId" name="subject" th:field="*{subjectId}" required
+                                                    class="form-select mb-2 me-sm-2">
+                                                <option selected disabled value="0">...</option>
+                                                <option th:each="subject:${subjects}" th:value="${subject.id}"
+                                                        th:text="${#strings.concat(subject.name)}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <div class="d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary"
+                                                        th:text="${isUpdate ? 'Update': 'Save'}">Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/multi-select.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

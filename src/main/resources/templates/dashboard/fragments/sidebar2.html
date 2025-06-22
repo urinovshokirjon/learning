@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+</head>
+<body>
+
+<nav id="sidebar" th:fragment="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+        <a class='sidebar-brand' href='/'>
+					<span class="sidebar-brand-text align-middle">
+						Learning Center Kit
+					</span>
+        </a>
+
+        <div class="sidebar-user">
+            <div class="d-flex justify-content-center">
+                <div class="flex-shrink-0">
+                    <img th:if="${@profileService.getCurrenUserPhoto()} == null"
+                         th:src="@{/img/default-user.jpg}" class="avatar img-fluid rounded me-1"/>
+                    <img th:if="${@profileService.getCurrenUserPhoto()} != null"
+                         th:src="@{/img/default-user.jpg}" class="avatar img-fluid rounded me-1"/>
+                </div>
+                <div class="flex-grow-1 ps-2">
+<!--                    <span th:text="${#authentication.getPrincipal().getUsername()}"></span>-->
+                    <span th:text="${@profileService.getCurrenDetail().getName()}"></span> <br>
+                    <span th:text="${@profileService.getCurrenDetail().getSurname()}"></span>
+                </div>
+            </div>
+        </div>
+
+        <ul class="sidebar-nav" sec:authorize="hasAuthority('ROLE_ADMIN')">
+            <li class="sidebar-header">
+                Pages
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/dashboard}"
+                   th:class="${#strings.equals(activeLink,'dashboard') ? 'sidebar-link active' : 'sidebar-link'}"
+                   class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/admin-profile/list}"
+                   th:class="${#strings.equals(activeLink,'profile') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/company/list}"
+                   th:class="${#strings.equals(activeLink,'company') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="command"></i> <span class="align-middle">Company</span>
+                </a>
+            </li>
+
+            <li class="sidebar-header">
+                Settings
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/help-senter}"
+                   th:class="${#strings.equals(activeLink,'help-senter') ? 'help-senter-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="help-circle"></i> <span
+                        class="align-middle">Help Center</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/profile-settings}"
+                   th:class="${#strings.equals(activeLink,'profiel-settings') ? 'profiel-settings-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="settings"></i> <span
+                        class="align-middle">Profile Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/auth/logout}">
+                    <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="sidebar-nav" sec:authorize="hasAuthority('ROLE_COMPANY_MANAGER')">
+            <li class="sidebar-header">
+                Pages
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/dashboard}"
+                   th:class="${#strings.equals(activeLink,'dashboard') ? 'sidebar-link active' : 'sidebar-link'}"
+                   class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/subject/list}"
+                   th:class="${#strings.equals(activeLink,'subject') ? 'sidebar-link subject' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Subject</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/company-profile/list}"
+                   th:class="${#strings.equals(activeLink,'profile') ? 'sidebar-link subject' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/branch/list}"
+                   th:class="${#strings.equals(activeLink,'branch') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="git-branch"></i> <span class="align-middle">Branch</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/group/list}"
+                   th:class="${#strings.equals(activeLink,'group') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="layers"></i> <span class="align-middle">Group</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/lessonPlan/list}"
+                   th:class="${#strings.equals(activeLink,'lessonPlan') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="list"></i> <span class="align-middle">Lesson Plan</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/student/list}"
+                   th:class="${#strings.equals(activeLink,'student') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="users"></i> <span class="align-middle">Student</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/attendance/groupList}"
+                   th:class="${#strings.equals(activeLink,'attendance') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="calendar"></i> <span class="align-middle">Attendance</span>
+                </a>
+            </li>
+
+            <li class="sidebar-header">
+                Settings
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/help-senter}"
+                   th:class="${#strings.equals(activeLink,'help-senter') ? 'help-senter-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="help-circle"></i> <span
+                        class="align-middle">Help Center</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/profile-settings}"
+                   th:class="${#strings.equals(activeLink,'profiel-settings') ? 'profiel-settings-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="settings"></i> <span
+                        class="align-middle">Profile Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/auth/logout}">
+                    <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="sidebar-nav" sec:authorize="hasAuthority('ROLE_BRANCH_MANAGER')">
+            <li class="sidebar-header">
+                Pages
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/dashboard}"
+                   th:class="${#strings.equals(activeLink,'dashboard') ? 'sidebar-link active' : 'sidebar-link'}"
+                   class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/subject/list}"
+                   th:class="${#strings.equals(activeLink,'subject') ? 'sidebar-link subject' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Subject</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/company-profile/list}"
+                   th:class="${#strings.equals(activeLink,'profile') ? 'sidebar-link subject' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/group/list}"
+                   th:class="${#strings.equals(activeLink,'group') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="layers"></i> <span class="align-middle">Group</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/student/list}"
+                   th:class="${#strings.equals(activeLink,'student') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="users"></i> <span class="align-middle">Student</span>
+                </a>
+            </li>
+
+            <li class="sidebar-header">
+                Settings
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/help-senter}"
+                   th:class="${#strings.equals(activeLink,'help-senter') ? 'help-senter-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="help-circle"></i> <span
+                        class="align-middle">Help Center</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/profile-settings}"
+                   th:class="${#strings.equals(activeLink,'profiel-settings') ? 'profiel-settings-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="settings"></i> <span
+                        class="align-middle">Profile Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/auth/logout}">
+                    <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="sidebar-nav" sec:authorize="hasAuthority('ROLE_TEACHER')">
+            <li class="sidebar-header">
+                Pages
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/dashboard}"
+                   th:class="${#strings.equals(activeLink,'dashboard') ? 'sidebar-link active' : 'sidebar-link'}"
+                   class="sidebar-link">
+                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/subject/list}"
+                   th:class="${#strings.equals(activeLink,'subject') ? 'sidebar-link subject' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Subject</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/group/list}"
+                   th:class="${#strings.equals(activeLink,'group') ? 'sidebar-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="layers"></i> <span class="align-middle">Group</span>
+                </a>
+            </li>
+
+            <li class="sidebar-header">
+                Settings
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/help-senter}"
+                   th:class="${#strings.equals(activeLink,'help-senter') ? 'help-senter-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="help-circle"></i> <span
+                        class="align-middle">Help Center</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/profile-settings}"
+                   th:class="${#strings.equals(activeLink,'profiel-settings') ? 'profiel-settings-link active' : 'sidebar-link'}">
+                    <i class="align-middle" data-feather="settings"></i> <span
+                        class="align-middle">Profile Settings</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item">
+                <a class='sidebar-link' th:href="@{/auth/logout}">
+                    <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">Log Out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+</body>
+</html>

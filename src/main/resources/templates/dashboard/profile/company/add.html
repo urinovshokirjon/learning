@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/multi-select.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/file_upload.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/profile.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+
+                <div onclick="goBack()" class="btn btn-primary"> &#x2190</div>
+
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="card ">
+                            <div class="card-body">
+                                <h3 class="mb-2" th:text="${isUpdate ? 'Profile Edit': 'Profile Added'}">Profile Added</h3>
+                                <form method="post"
+                                      th:action="${isUpdate} ? @{/company-profile/update/{profileId}(profileId=${profile.id})} : @{/company-profile/add}"
+                                      th:object="${profile}"
+                                      enctype="multipart/form-data" autocomplete="off">
+
+                                    <div class="row">
+                                        <!-- Photo-->
+                                        <div class="col-4">
+                                            <label for="file-upload-input-id">Photo</label>
+                                            <div class="form-image-block">
+                                                <img src="" th:src="${profile.photoUrl != null ? profile.photoUrl : ''}"
+                                                     id="file-upload-img-id" alt="">
+                                            </div>
+                                            <div class="file-input-wrapper">
+                                                <input type="file" id="file-upload-input-id" name="file"
+                                                       accept="image/*"
+                                                       hidden/>
+                                                <label for="file-upload-input-id">Choose file</label>
+                                            </div>
+                                        </div>
+                                        <!-- End Photo-->
+                                        <div class="col-8">
+                                            <div class="flex-grow-1">
+                                                <div class=" pb-2">
+                                                    <label for="name">Name:</label>
+                                                    <input type="text" id="name" class="form-control" name="name"
+                                                           placeholder="name"
+                                                           th:field="*{name}" required>
+                                                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                                                </div>
+                                                <div class=" pb-2">
+                                                    <label for="surname">Surname:</label>
+                                                    <input type="text" id="surname" class="form-control" name="surname"
+                                                           placeholder="surname"
+                                                           th:field="*{surname}" required>
+                                                    <div th:if="${#fields.hasErrors('surname')}"
+                                                         th:errors="*{surname}"></div>
+                                                </div>
+                                                <div class=" pb-2">
+                                                    <label for="phone">Phone Number:</label>
+                                                    <input type="tel" id="phone" class="form-control" name="phone"
+                                                           placeholder="phone"
+                                                           th:field="*{phone}" required>
+                                                    <div th:if="${#fields.hasErrors('phone')}"
+                                                         th:errors="*{phone}"></div>
+                                                </div>
+                                                <div class=" pb-2">
+                                                    <label for="password">Password:</label>
+                                                    <input type="password" id="password" class="form-control"
+                                                           name="password"
+                                                           th:disabled="${isUpdate}"
+                                                           placeholder="password"
+                                                           th:field="*{password}" required>
+                                                    <div th:if="${#fields.hasErrors('password')}"
+                                                         th:errors="*{password}"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <!-- Role Select -->
+                                        <div class="col-12 mt-2">
+                                            <label class="form-label" for="roleInput">Roles</label>
+                                            <!-- Select for binding -->
+                                            <select id="selectedItemsBinding" name="role" multiple
+                                                    th:field="*{roles}" hidden> </select>
+                                            <div class="multi-select-dropdown"
+                                                 data-select-for-binding-tag-id="selectedItemsBinding">
+                                                <div class="dropdown" id="roleInput">
+                                                    <div class="dropdown-toggle" id="multiSelectDropdown"
+                                                         data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <div class="selected-items">
+                                                           <span class="badge" th:each="role : ${profile.roles}"
+                                                                 th:data-value="${role.name}">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="dropdown-menu aaa" aria-labelledby="multiSelectDropdown">
+                                                        <li>
+                                                            <label class="dropdown-item">
+                                                                <input type="checkbox" value="ROLE_COMPANY_MANAGER">
+                                                                Manager
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <label class="dropdown-item">
+                                                                <input type="checkbox" value="ROLE_TEACHER"> Teacher
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 display-none mt-2" id="subjectDiv">
+                                            <label for="subject">Subject</label>
+                                            <!-- Select for binding -->
+                                            <select id="selectedSubjectItemBinding" name="role" multiple
+                                                    th:field="*{subject}" hidden> </select>
+
+                                            <div class="multi-select-dropdown"
+                                                 data-select-for-binding-tag-id="selectedSubjectItemBinding">
+                                                <div class="dropdown" id="subject">
+                                                    <div class="dropdown-toggle" id="multiSelectSubjectDropdown"
+                                                         data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <div class="selected-items">
+                                                              <span class="badge" th:each="subject : ${subjects}"
+                                                                    th:data-value="${subject.id}">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <ul class="dropdown-menu "
+                                                        aria-labelledby="multiSelectSubjectDropdown">
+                                                        <li th:each="subject : ${subjects}">
+                                                            <label class="dropdown-item">
+                                                                <input type="checkbox" th:value="${subject.id}">
+                                                                <span th:text="${subject.name}"
+                                                                      th:remove="tag">title</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Button  -->
+                                        <div class="col-12 mt-2">
+                                            <div class="d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary"
+                                                        th:text="${isUpdate ? 'Update': 'Save'}">Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/file_upload.js}"></script>
+<script th:src="@{/js/multi-select.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+<script>
+    // Select the element to observe
+    const targetElement = document.getElementById('selectedItemsBinding');
+    // Create a MutationObserver instance and provide a callback function
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                toggleSubjectField();
+            }
+        }
+    });
+    // Configure the observer to watch for changes in child nodes and attributes
+    const config = {childList: true, attributes: true};
+    // Start observing the target element with the configured options
+    observer.observe(targetElement, config);
+
+    // When ROLE_TEACHER role selected Subject select should appear.
+    function toggleSubjectField() {
+        var roleSelect = document.getElementById('selectedItemsBinding');
+        var subjectDiv = document.getElementById('subjectDiv');
+        var subjectSelect = document.getElementById('subject');
+        var selectedRoles = Array.from(roleSelect.options).filter(option => option.selected).map(option => option.value);
+
+        if (selectedRoles.includes('ROLE_TEACHER')) {
+            subjectDiv.style.display = 'block';
+            subjectSelect.setAttribute('required', 'required');
+        } else {
+            subjectDiv.style.display = 'none';
+            subjectSelect.removeAttribute('required');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleSubjectField();
+    });
+</script>
+
+</body>
+</html>

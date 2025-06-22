@@ -1,0 +1,10 @@
+.nav-bar-container{
+    background-color: #e9ecef;
+    padding: 5px 0 !important;
+}
+
+.top-bar-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

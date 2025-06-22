@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/lessonPlanItem.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/file_upload.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Lesson plan item')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body px-1 pt-1">
+            <div onclick="goBack()" class="btn btn-primary"> &#x2190 </div>
+            <div class="card with-50 margin-auto">
+                <div class="card-body">
+                    <h1 class="h3 mb-2 text-gray-800"> Update Lesson Plan Item </h1>
+                    <form method="post"
+                          th:action="@{/lesson_plan_item/update/{lessonPlanItemId}(lessonPlanItemId=${lessonPlanItemU.id})}"
+                          th:object="${lessonPlanItemU}"
+                          enctype="multipart/form-data" autocomplete="off">
+                        <br>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <label for="title">Title:</label>
+                                    <input type="text" id="title" class="form-control" name="title" placeholder="write title"
+                                           th:field="*{title}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <label for="orderNumber">Order number:</label>
+                                    <input type="text" id="orderNumber" class="form-control" name="orderNumber" placeholder="write order number"
+                                           th:field="*{orderNumber}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <label for="description">Description:</label>
+                                    <textarea type="text" id="description" class="form-control" name="description" placeholder="write description"
+                                              th:field="*{description}" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <label for="homework">Homework:</label>
+                                    <textarea type="text" id="homework" class="form-control" name="homework" placeholder="write homework"
+                                              th:field="*{homework}" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <input type="hidden" id="lessonPlanId" class="form-control" name="lessonPlanId"
+                                           th:field="*{lessonPlanId}" required th:value="${lessonPlanItemU.lessonPlanId}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <input type="hidden" id="lessonPlanItemId" class="form-control" name="lessonPlanItemId"
+                                           th:field="*{id}" required th:value="${lessonPlanItemU.id}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" ">
+                            <div class="row justify-content-end">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary"
+                                                th:text="${'Update'}">Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Page  End-->
+    </div>
+</div>
+
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/file_upload.js}"></script>
+
+</body>
+</html>

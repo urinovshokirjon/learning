@@ -1,0 +1,13 @@
+.lessonPlanItem-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.lessonPlanItem-image-wrapper {
+    width: 15%;
+}
+
+.lessonPlanItem-image-wrapper img {
+    width: 100%;
+}

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+</head>
+<body>
+
+<nav id="sidebar" th:fragment="sidebar">
+    <div class="p-4 pt-1">
+        <div class="text-center">
+            <a href="https://www.dasturlash.uz/" target="_blank">
+                <img style="width: 100px" th:src="@{/img/logo.jpg}" alt="">
+            </a>
+        </div>
+
+        <ul sec:authorize="hasAuthority('ROLE_ADMIN')" class="list-unstyled components mb-5">
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'dashboard') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/dashboard}">Admin Panel</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'profile') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/admin-profile/list}">Profile</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'company') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/company/list}">Company</a>
+            </li>
+        </ul>
+
+        <ul sec:authorize="hasAuthority('ROLE_COMPANY')" class="list-unstyled components mb-5">
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'dashboard') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/dashboard}">Company Panel</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'subject') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/subject/list}">Subject</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'profile') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/company-profile/list}">Profile</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'branch') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/branch/list}">Branch</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'group') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/group/list}">Group</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'lessonPlan') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/lessonPlan/list}">Lesson Plan</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'student') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/student/list}">Student</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'attendance') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/attendance/groupList}">Attendance</a>
+            </li>
+        </ul>
+
+        <ul sec:authorize="hasAuthority('ROLE_COMPANY_MANAGER')" th:if="${!#authorization.expression('hasAuthority(''ROLE_ADMIN'')') and !#authorization.expression('hasAuthority(''ROLE_COMPANY'')') and #authorization.expression('hasAuthority(''ROLE_COMPANY_MANAGER'')')}" class="list-unstyled components mb-5">
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'dashboard') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/dashboard}">Company Manager Panel</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'subject') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/subject/list}">Subject</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'profile') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/company-profile/list}">Profile</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'group') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/group/list}">Group</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'student') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/student/list}">Student</a>
+            </li>
+        </ul>
+
+        <ul sec:authorize="hasAuthority('ROLE_TEACHER')" th:if="${!#authorization.expression('hasAuthority(''ROLE_COMPANY'')') and !#authorization.expression('hasAuthority(''ROLE_COMPANY_MANAGER'')') and #authorization.expression('hasAuthority(''ROLE_TEACHER'')')}" class="list-unstyled components mb-5">
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'dashboard') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/dashboard}">Teacher Panel</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'subject') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/subject/list}">Subject</a>
+            </li>
+            <li class="nav-item" th:class="${#strings.equals(activeLink,'group') ? 'nav-item active' : 'nav-item'}">
+                <a th:href="@{/group/list}">Group</a>
+            </li>
+        </ul>
+
+        <div class="footer">
+            <p>
+                <a th:href="@{/auth/logout}">Log Out</a>
+            </p>
+        </div>
+
+    </div>
+</nav>
+
+
+
+</body>
+</html>

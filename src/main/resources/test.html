@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+<!--                                    <input type="text" name="id" th:field="*{attendancyList[__${itemStat.index}__].id}" hidden/>-->
+
+
+
+<td th:each="attendance, itemStat : ${student.attendanceList}">
+    <!--                                <span th:text="${attendance.attendanceDate}"></span>-->
+    <!--                                <span th:text="${dates[__${itemStat.index}__]}"></span>-->
+    <div th:if="${attendance.attendanceDate == dates[__${itemStat.index}__]}">
+        <span th:text="${attendance.came}"></span> <br>
+        <span th:text="${attendance.homeworkStatus}"></span>
+    </div>
+    <div th:if="${attendance.attendanceDate != dates[__${itemStat.index}__]}">
+        <input type="checkbox" class="attendance-checkbox"/>
+        <!--                                    <input type="number" th:field="*{attendancyList[__${itemStat.index}__].id}"-->
+        <!--                                           hidden/>-->
+        <!--                                    <input type="checkbox" th:id="'attendance_' + ${student.id} + '_' + ${date}"-->
+        <!--                                           name="attendance" value="PRESENT" class="attendance-checkbox"-->
+        <!--                                           onchange="toggleHomeworkSelect(this)"-->
+        <!--                                           th:field="*{attendancyList[__${itemStat.index}__].came}"/>-->
+        <!--                                    <select th:id="'homework_' + ${student.id} + '_' + ${date}" name="homework"-->
+        <!--                                            style="display:none;"-->
+        <!--                                            th:field="*{attendancyList[__${itemStat.index}__].homeWork}">-->
+        <!--                                        <option value="DONE">DONE</option>-->
+        <!--                                        <option value="NONE">NONE</option>-->
+        <!--                                    </select>-->
+    </div>
+</td>
+
+
+</body>
+</html>

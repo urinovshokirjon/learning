@@ -1,0 +1,8 @@
+
+/* Change the font style of the calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: rgba(208, 208, 208, 0.64);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}

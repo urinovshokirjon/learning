@@ -1,0 +1,87 @@
+.main_body {
+    /*background-color: #f8f9fa;*/
+    /*height: 100vh;*/
+}
+
+.form_hr {
+    margin-top: 0;
+}
+
+.form_header {
+    /* font-weight: 700; */
+    font-size: 18px;
+    /*color: gray;*/
+    color: #b1b1b1;
+}
+
+.detail_header {
+    font-size: 18px;
+    color: gray;
+}
+
+.detail_small {
+    margin: 0;
+    size: 10px;
+    font-size: 13px;
+    color: #b1b1b1 !important;
+}
+
+.detail_main {
+    color: black;
+    font-weight: 500;
+}
+
+.with-50 {
+    width: 50%;
+}
+
+.m-with-100px {
+    min-width: 100px;
+}
+
+.m-with-150px {
+    min-width: 150px;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.padding-025-rem {
+    padding: 0.25rem;
+}
+
+.mh-100vh {
+    min-height: 100vh;
+}
+
+.height-100{
+    height: 100%;
+}
+
+.gap-10 {
+    gap: 10px;
+}
+
+.default-bg {
+    background-color: #f8f9fa;
+}
+
+.display-none {
+    display: none;
+}
+
+.bg-red {
+    background-color: red;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+.bg-yellow {
+    background-color: yellow;
+}
+
+
+

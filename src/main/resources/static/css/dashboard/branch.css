@@ -1,0 +1,13 @@
+.branch-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.branch-image-wrapper {
+    width: 15%;
+}
+
+.branch-image-wrapper img {
+    width: 100%;
+}

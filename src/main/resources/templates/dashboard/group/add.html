@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <!--    <link type="text/css" rel="stylesheet" th:href="@{/css/file_upload.css}"/>-->
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <!--    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/group.css}"/>-->
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+                <div onclick="goBack()" class="btn btn-primary"> &#x2190</div>
+
+                <div class="row justify-content-center">
+                    <div class="col-8 ">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="mb-2" th:text="${isUpdate ? 'Edit Group': 'Add Group'}">Group Added</h3>
+                                <form method="post"
+                                      th:action="${isUpdate} ? @{/group/update/{groupId}(groupId=${group.id})} : @{/group/add}"
+                                      th:object="${group}"
+                                      enctype="multipart/form-data" autocomplete="off">
+
+                                    <div class="row">
+                                        <div class="col-12  pb-2">
+                                            <label for="name">Name:</label>
+                                            <input type="text" id="name" class="form-control" name="name"
+                                                   placeholder="name"
+                                                   th:field="*{name}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row" sec:authorize="hasRole('ROLE_COMPANY_MANAGER')">
+                                        <div class="col-12  pb-2">
+                                            <label for="name">Branch:</label>
+                                            <select id="branch_select_id" name="branches" th:field="*{branchId}"
+                                                    required
+                                                    class="form-control">
+                                                <option selected disabled value="0">...</option>
+                                                <option th:each="branch:${branches}" th:value="${branch.id}"
+                                                        th:text="${#strings.concat(branch.branchName,' - ',branch.branchAddress,' - ',' (',branch.contact,')')}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12  pb-2">
+                                            <label for="name">Teacher:</label>
+                                            <select id="teacher_select_id" name="Teachers" th:field="*{teacherId}"
+                                                    required
+                                                    class="form-control">
+                                                <option selected disabled value="0">...</option>
+                                                <option th:each="teacher:${Teachers}" th:value="${teacher.id}"
+                                                        th:text="${#strings.concat(teacher.name,' - ',teacher.surname,' - ',' (',teacher.phone,')')}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12  pb-2">
+                                            <label for="name">Subject:</label>
+                                            <select id="subject_select_id" name="subjects" th:field="*{subjectId}"
+                                                    required
+                                                    class="form-control">
+                                                <option selected disabled value="0">...</option>
+                                                <option th:each="subject:${subjects}" th:value="${subject.id}"
+                                                        th:text="${subject.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12  pb-2">
+                                            <label for="startDate">Start Date:</label>
+                                            <input type="date" id="startDate" name="birthday"
+                                                   pattern="yyyy-MM-dd"
+                                                   th:data-value="*{startDate}"
+                                                   th:field="*{startDate}"
+                                                   th:value="*{startDate}" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12  pb-2">
+                                            <label for="duration">Duration (month):</label>
+                                            <select id="duration" class="form-control" name="duration" th:field="*{duration}" required>
+                                                <option value="" disabled>Select duration</option>
+                                                <option th:each="i : ${#numbers.sequence(1, 10)}" th:value="${i}"
+                                                        th:text="${i + ' month'}" th:selected="${group.duration == i}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="font-weight-bold h3 mt-3">Choose lesson days of week and hours:</label>
+                                    </div>
+
+                                    <!-- Monday -->
+                                    <div class="row">
+                                        <div class="col-12 pb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       th:field="*{mondaySelected}"
+                                                       th:checked="${group != null and group.mondaySelected ? 'checked' : ''}">
+                                                <label class="form-check-label">Monday</label>
+                                                <input type="time"
+                                                       th:field="*{mondayTime}"
+                                                       th:disabled="${!group.mondaySelected}"
+                                                       th:value="${group.mondayTime}"
+                                                       th:data-value="*{mondayTime}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tuesday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:field="*{tuesdaySelected}"
+                                                   th:checked="${group != null and group.tuesdaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Tuesday</label>
+                                            <input type="time" th:field="*{tuesdayTime}"
+                                                   th:disabled="${!group.tuesdaySelected}"
+                                                   th:value="${group.tuesdayTime}"
+                                                   th:data-value="*{tuesdayTime}" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Wednesday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:field="*{wednesdaySelected}"
+                                                   th:checked="${group != null and group.wednesdaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Wednesday</label>
+                                            <input type="time" th:field="*{wednesdayTime}"
+                                                   th:disabled="${!group.wednesdaySelected}"
+                                                   th:value="${group.wednesdayTime}"
+                                                   th:data-value="*{wednesdayTime}"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Thursday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:field="*{thursdaySelected}"
+                                                   th:checked="${group != null and group.thursdaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Thursday</label>
+                                            <input type="time" th:field="*{thursdayTime}"
+                                                   th:disabled="${!group.thursdaySelected}"
+                                                   th:value="${group.thursdayTime}"
+                                                   th:data-value="*{thursdayTime}"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Friday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" th:field="*{fridaySelected}"
+                                                   th:checked="${group != null and group.fridaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Friday</label>
+                                            <input type="time" th:field="*{fridayTime}"
+                                                   th:disabled="${!group.fridaySelected}"
+                                                   th:value="${group.fridayTime}"
+                                                   th:data-value="*{fridayTime}"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Saturday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   th:field="*{saturdaySelected}"
+                                                   th:checked="${group != null and group.saturdaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Saturday</label>
+                                            <input type="time" th:field="*{saturdayTime}"
+                                                   th:disabled="${!group.saturdaySelected}"
+                                                   th:value="${group.saturdayTime}"
+                                                   th:data-value="*{saturdayTime}"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sunday -->
+                                    <div class="pb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" th:field="*{sundaySelected}"
+                                                   th:checked="${group != null and group.sundaySelected ? 'checked' : ''}">
+                                            <label class="form-check-label">Sunday</label>
+                                            <input type="time" th:field="*{sundayTime}"
+                                                   th:disabled="${!group.sundaySelected}"
+                                                   th:value="${group.sundayTime}"
+                                                   th:data-value="*{sundayTime}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class=" ">
+                                        <div class="row justify-content-end">
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary"
+                                                            th:text="${isUpdate ? 'Update': 'Save'}">Save
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/dashboard/groupDate.js}"></script>
+
+</body>
+</html>

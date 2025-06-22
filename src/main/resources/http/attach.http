@@ -1,0 +1,39 @@
+### Create File(photo....)
+POST http://localhost:8080/attach/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="IMG_20221013_203554_958.jpg"
+
+< C:\Users\Bobur_Jumaniyazov\Desktop\images\IMG_20221013_203554_958.jpg
+
+### getUrl
+POST http://localhost:8080/attach/upload2
+Content-Type: application/json
+
+{
+
+}
+
+
+### Get By Id(Open)
+GET http://localhost:8080/attach/any/5112368f-a066-4c26-b239-5246fd093cdd.jpg
+
+### Download
+GET http://localhost:8080/attach/any/download/314d33d2-7a93-4754-8317-60d08f6500ef.jpg
+Accept-Language: UZ
+
+### Delete By Id
+DELETE http://localhost:8080/attach/adm/314d33d2-7a93-4754-8317-60d08f6500ef
+Accept-Language: UZ
+
+### getUrl
+GET http://localhost:8080/attach/getUrl/2f7fe3f8-1f3d-4a54-b4bd-5a083aa143c2
+
+
+
+
+
+
+
+

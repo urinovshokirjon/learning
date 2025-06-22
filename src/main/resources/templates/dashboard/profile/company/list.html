@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+                <h1 class="h3 mb-3">Profile</h1>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header pb-0 px-1 d-flex justify-content-between align-items-center">
+
+                                <form class="row row-cols-md-auto align-items-end"
+                                      th:action="@{/company-profile/list}" method="get"
+                                      th:object="${filterDTO}">
+                                    <div class="col-12">
+                                        <label class="form-label" for="name-surname-input">Name/Surname</label>
+                                        <input type="text" name="nameQuery" th:field="*{nameQuery}"
+                                               class="form-control mb-2 me-sm-2" id="name-surname-input">
+                                    </div>
+                                    <div class="col-12 px-1">
+                                        <label class="form-label" for="phoneInput">Phone</label>
+                                        <input type="text" name="phone"
+                                               th:field="${filterDTO.phone}"
+                                               class="form-control mb-2 me-sm-2" id="phoneInput">
+                                    </div>
+                                    <div class="col-12 px-1">
+                                        <label class="form-label" for="roleInput">Roles</label>
+                                        <select id="roleInput" name="role" th:field="*{role}"
+                                                class="form-select mb-2 me-sm-2"
+                                                aria-label=".form-select-sm example">
+                                            <option disabled th:value="${'NON'}">...</option>
+                                            <option th:value="${'ROLE_COMPANY_MANAGER'}">Manager</option>
+                                            <option th:value="${'ROLE_TEACHER'}">Teacher</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 px-1">
+                                        <a th:href="@{/company-profile/list}" type="submit"
+                                           class="btn btn-info mb-2">
+                                            <i class="align-middle" data-feather="x"></i>
+                                        </a>
+                                        <button type="submit" class="btn btn-info mb-2">
+                                            <i class="align-middle" data-feather="search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="align-self-end">
+                                    <a th:href="@{/company-profile/go/add}" class="btn btn-primary mb-2" role="button">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Create</a>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2 px-1">
+                                <table class="table table-striped table-sm table-bordered ">
+                                    <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Phone</th>
+                                        <th>Subject</th>
+                                        <th>Roles</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="profile: ${profileList}">
+                                        <td th:text="${profileStat.count}"/>
+                                        <td class="profile-image-wrapper">
+                                            <img th:src="${profile.photoUrl}" alt="Profile image">
+                                        </td>
+                                        <td th:text="${profile.name}"/>
+                                        <td th:text="${profile.surname}"/>
+                                        <td th:text="${profile.phone}"/>
+                                        <td>
+                                            <p th:each="subject: ${profile.subjectStr?.split(',')}"
+                                               th:text="${subject}">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p th:each="role: ${profile.roleStr?.split(',')}" th:text="${role}">
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{'/company-profile/go/update/'+${profile.id}}"
+                                               class="btn btn-warning btn-sm" role="button"
+                                               aria-pressed="true">
+                                                <i class="align-middle" data-feather="edit-2"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm" role="button" title="Delete Profile"
+                                                    th:data-id="${profile.id}"
+                                                    onclick="openDeleteProfileButton(this)">
+                                                <i class="align-middle" data-feather="trash-2"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <nav aria-label="Pagination" th:if="${totalPages > 0}">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: profileCompanyPagination(1, '<<', 'First Page', ${filterDTO}, 2)}"></a>
+                                        </li>
+                                        <li class="page-item font-weight-bold"
+                                            th:classappend="${currentPage == 1} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: profileCompanyPagination(${currentPage - 1}, 'Prev', 'Previous Page', ${filterDTO}, ${pageSiz})}"></a>
+                                        </li>
+                                        <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                                            <a class="page-link" href="#">...</a>
+                                        </li>
+                                        <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                                            th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                                            <a th:replace="~{dashboard/fragments/pagination :: profileCompanyPagination(${page}, ${page}, 'Page ' + ${page}, ${filterDTO}, ${pageSiz})}"></a>
+                                        </li>
+                                        <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                                            <a class="page-link" href="#">...</a>
+                                        </li>
+                                        <li class="page-item font-weight-bold"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: profileCompanyPagination(${currentPage + 1},'Next', 'Next Page', ${filterDTO}, ${pageSiz})}"></a>
+                                        </li>
+                                        <li class="page-item"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: profileCompanyPagination(${totalPages}, '>>', 'Last Page', ${filterDTO}, ${pageSiz})}"></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+<!-- Delete profile button -->
+<button type="button" class="btn btn-danger" id="profileDeleteModalButtonId"
+        data-bs-toggle="modal" style="display: none;" data-bs-target="#profileDeleteModalId">
+    Open Delete Modal
+</button>
+
+<!-- Delete profile modal -->
+<div class="modal fade" id="profileDeleteModalId" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Profile</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body m-3">
+                <h3>You want delete profile?</h3>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--                <button type="button" class="btn btn-danger">Save changes</button>-->
+
+                <form th:action="@{'/company-profile/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteProfileModalInput" hidden>
+                    <button type="submit" class="btn btn-danger" >Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete profile modal -->
+<!--<div class="modal fade" id="profileDeleteModalId1">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            &lt;!&ndash; Modal Header &ndash;&gt;-->
+<!--            <div class="modal-header">-->
+<!--                <h4 class="modal-title">Delete Profile</h4>-->
+<!--                <button type="button" class="close" data-dismiss="modal">&times;</button>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Modal body &ndash;&gt;-->
+<!--            <div class="modal-body">-->
+<!--                You want delete profile?-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Modal footer &ndash;&gt;-->
+<!--            <div class="modal-footer">-->
+<!--                <form th:action="@{'/company-profile/delete'}" method="POST">-->
+<!--                    <input type="text" name="id" id="deleteProfileModalInput2" hidden>-->
+<!--                    <button type="submit" class="btn btn-danger">Delete</button>-->
+<!--                </form>-->
+<!--                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/dashboard/profile.js}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/lessonPlan.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/items.css}"/>
+</head>
+
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+
+                <div class="d-flex gap-10 py-1 align-items-start">
+                    <a th:href="@{'/lessonPlan/list'}"
+                       class="btn btn-primary btn-sm">
+                        &#x2190
+                    </a>
+                    <div class="h3" th:text="${lessonPlanName}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header pb-0 px-1 d-flex justify-content-end">
+                                <div class="align-self-end">
+                                    <a th:href="@{'/lesson_plan_item/go/add/'+ ${currentLessonPlanId}}"
+                                       class="btn btn-primary mb-2" role="button">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Create</a>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2 px-1">
+                                <table class="table table-striped table-sm table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>№</th>
+                                        <th>Title</th>
+                                        <th>Order number</th>
+                                        <th>Description</th>
+                                        <th>Homework</th>
+                                        <th>Created date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item: ${items}">
+                                        <td th:text="${itemStat.count}"/>
+                                        <td th:text="${item.title}"/>
+                                        <td th:text="${item.orderNumber}"/>
+                                        <td th:text="${item.description}"/>
+                                        <td th:text="${item.homework}"/>
+                                        <td th:text="${item.createdDate}"/>
+                                        <td>
+                                            <a th:href="@{'/lesson_plan_item/go/update/'+${item.id}}"
+                                               class="btn btn-warning btn-sm"
+                                               role="button" aria-pressed="true">
+                                                <i class="align-middle" data-feather="edit-2"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm" role="button"
+                                                    title="Delete Lesson Plan Item"
+                                                    th:data-id="${item.id}"
+                                                    onclick="openDeleteLessonPlanItemButton(this)">
+                                                <i class="align-middle" data-feather="trash-2"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+<!-- Page  End-->
+
+<!-- Delete Lesson Plan Item button -->
+<button type="button" id="lessonPlanItemDeleteModalButtonId" class="btn btn-primary" hidden
+        data-toggle="modal" data-target="#lessonPlanItemDeleteModalId">
+    Open modal
+</button>
+<!-- Delete Lesson Plan Item modal -->
+<div class="modal fade" id="lessonPlanItemDeleteModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Lesson Plan Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                Do you want to delete Lesson Plan Item?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/lesson_plan_item/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteLessonPlanItemModalInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/multi-select.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+<script th:src="@{/js/dashboard/lessonPlanItem.js}"></script>
+
+</body>
+</html>

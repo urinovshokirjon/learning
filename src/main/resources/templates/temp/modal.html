@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<!-- Delete profile button -->
+<button type="button" class="btn btn-danger" id="subjectDeleteModalButtonId"
+        data-bs-toggle="modal" style="display: none;" data-bs-target="#subjectDeleteModalId">
+    Open Delete Modal
+</button>
+
+<!-- Delete profile modal -->
+<div class="modal fade" id="subjectDeleteModalId" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Subject</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body m-3">
+                <h3>You want delete subject?</h3>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/subject/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteSubjectModalInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteSubjectModal(e) {
+        document.getElementById("deleteSubjectModalInput").value = e.getAttribute('data-id');
+        var modalOpenButton = document.getElementById("subjectDeleteModalButtonId");
+        modalOpenButton.click();
+    }
+</script>
+
+
+</body>
+</html>

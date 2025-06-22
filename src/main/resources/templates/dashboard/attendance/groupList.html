@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+
+                <h1 class="h3 mb-3">Attendance Group List</h1>
+
+                <div class="row">
+                    <div class="col-6" th:each="group : ${groupList}">
+                        <div class="card rounded-2">
+                            <div class="card-header text-center">
+                                Group Name: <span th:utext="${group.name}" >Group Name</span>
+                            </div>
+                            <div class="card-body padding-025-rem">
+
+                                <p><strong>Started Date:</strong> <span th:text="${group.startDate}">Started Date</span>
+                                </p>
+                                <p><strong>Duration:</strong> <span
+                                        th:text="${group.duration + ' month' + (group.duration > 1 ? 's' : '') }">Duration</span>
+                                </p>
+                                <p><strong>Student Count:</strong> <span
+                                        th:text="${group.studentCount}">Student Count</span>
+                                </p>
+                                <p><strong>Teacher Name:</strong> <span
+                                        th:text="${group.teacherName}">Teacher Name</span>
+                                </p>
+                                <p><strong>Teacher Surname:</strong> <span
+                                        th:text="${group.teacherSurname}">Teacher Surname</span></p>
+                                <p><strong>Teacher Phone:</strong> <span
+                                        th:text="${group.teacherPhone}">Teacher Phone</span>
+                                </p>
+                                <a th:href="@{'/attendance/studentList/' + ${group.id}}"
+                                   class="btn btn-warning btn-sm" role="button" aria-pressed="true">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> View Students
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>
+

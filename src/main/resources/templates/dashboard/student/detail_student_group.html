@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../../../static/css/dashboard/student.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/student.css}"/>
+
+</head>
+<body>
+
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Student Group')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body px-1 pt-1">
+            <div class="my-3">
+                <div onclick="goBack()" class="btn btn-primary"> &#x2190</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Student</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img th:src="${student.photoUrl}" alt="Student Photo"
+                                 class="img-fluid img-square"
+                                 style="width: 100px; height: 120px; border: 2px solid #000;">
+                        </div>
+                        <div class="col-md-8">
+                            <p><strong>Full Name:</strong> <span
+                                    th:text="${student.name} + ' ' + ${student.surname}"></span></p>
+                            <p><strong>Phone:</strong> <span th:text="${student.phone}"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card my-4">
+                <div class="card-header">
+                    <h3 class="card-title">Group</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p><strong>Group Name:</strong> <span th:text="${group.name}"></span></p>
+                            <p><strong>Subject Name:</strong> <span th:text="${group.subjectName}"></span></p>
+                            <p><strong>Teacher Name:</strong> <span th:text="${group.teacherName}"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card my-4">
+                <div class="card-header">
+                    <h3 class="card-title">Student Group</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p><strong>Joined Date: </strong> <span th:text="${studentGroup.joinedDate}"></span>
+                                <button class="btn btn-danger btn-sm" role="button" title="Delete Profile"
+                                        th:data-id="${studentGroup.id}"
+                                        th:data-student-id="${student.id}"
+                                        onclick="openDeleteButton(this)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </p>
+<!--                            <p><strong>Left Date: </strong> <span th:text="${studentGroup.leftDate}"></span>-->
+<!--                                -->
+<!--                            </p>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Delete student button -->
+<button type="button" id="studentDeleteModalButtonId" class="btn btn-primary" hidden
+        data-toggle="modal" data-target="#studentDeleteModalId">
+    Open modal
+</button>
+<!-- Delete student modal -->
+<div class="modal fade" id="studentDeleteModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Student</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <p>Do you want to remove the student from the group?</p>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/student_group/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteStudentGroupModalInput" hidden>
+                    <input type="text" name="studentId" id="deleteStudentModalIdInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/dashboard/student.js}"></script>
+</body>
+</html>

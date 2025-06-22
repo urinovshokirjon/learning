@@ -1,0 +1,21 @@
+.student-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+}
+
+.student-image-wrapper{
+    width: 110px;
+    height: 110px;
+}
+.student-img{
+    width: 100px;
+    height: 100px;
+}

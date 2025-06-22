@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="dashboard/../../static/css/admin/profile.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/profile.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Company')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body px-1 pt-1">
+            <div class="card mh-100vh">
+                <div class="card-body padding-025-rem">
+
+                    <div class="profile-table-head">
+                        <h4 class="mb-4">Company</h4>
+                        <a th:href="@{/company/go/add}" class="btn btn-primary btn-sm" role="button">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                            Create</a>
+                    </div>
+                    <form th:action="@{/company/list}" method="get" class="d-flex" th:object="${filterDTO}">
+                        <div class="form-group pl-1 py-1">
+                            <label for="filterNameQuery">Name</label>
+                            <input id="filterNameQuery" type="text" name="name" class="form-control"
+                                   placeholder="Name "
+                                   th:field="*{name}">
+                        </div>
+                        <div class="form-group pl-1 py-1">
+                            <label for="owner">Owner</label>
+                            <input id="owner" type="text" name="owner" class="form-control"
+                                   placeholder="Owner "
+                                   th:field="*{owner}">
+                        </div>
+                        <div class="form-group  pl-1 py-1">
+                            <label for="content">Contact</label>
+                            <input type="text" id="contact" class="form-control" name="content"
+                                   placeholder="Content" th:field="${filterDTO.contact}">
+                        </div>
+
+                        <div class="d-flex align-items-end"
+                             style="padding: 0.25rem 0.25rem 0.25rem 0.40rem !important">
+                            <button type="submit" class="btn btn-info " style="margin-bottom: 1.1rem!important;"
+                                    data-toggle="tooltip" data-placement="bottom" title="Поиск">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="d-flex p-1 align-items-end">
+                            <a th:href="@{/company/list}" type="submit" class="btn btn-info "
+                               style="margin-bottom: 1.1rem!important;"
+                               data-toggle="tooltip" data-placement="bottom" title="Отменить фильтр"><i
+                                    class="fa fa-ban"></i></a>
+                        </div>
+                    </form>
+
+                    <table class="table table-striped table-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th> Id</th>
+                            <th>Photo</th>
+                            <th> Name</th>
+                            <th> Contact</th>
+                            <th> Owner</th>
+                            <th> Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:if="${companyList.isEmpty()}">
+                            <td colspan="2"> Company not available</td>
+                        </tr>
+                        <tr th:each="company : ${companyList}">
+                            <td th:text="${companyStat.count}"/>
+                            <td class="profile-image-wrapper">
+                                <img th:src="${company.photoUrl}" alt="Profile image">
+                            </td>
+                            <td><span th:text="${company.name}"> Name </span></td>
+                            <td><span th:text="${company.contact}"> Contact </span></td>
+                            <td><span th:text="${company.owner.name}"> Owner </span></td>
+                            <td>
+                                <a th:href="@{'/company/go/update/'+${company.id}}"
+                                   class="btn btn-warning btn-sm" role="button"
+                                   aria-pressed="true"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                <button class="btn btn-danger btn-sm" role="button" title="Delete Profile"
+                                        th:data-id="${company.id}"
+                                        onclick="openDeleteProfileButton(this)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <nav aria-label="Pagination" th:if="${totalPages > 0}">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                <a th:replace="~{dashboard/fragments/pagination :: companyPagination(1, '<<', 'First Page', ${filterDTO}, 2)}"></a>
+                            </li>
+                            <li class="page-item font-weight-bold"
+                                th:classappend="${currentPage == 1} ? 'disabled'">
+                                <a th:replace="~{dashboard/fragments/pagination :: companyPagination(${currentPage - 1}, 'Prev', 'Previous Page', ${filterDTO}, ${pageSize})}"></a>
+                            </li>
+                            <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                                <a class="page-link" href="#">...</a>
+                            </li>
+                            <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                                th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                                <a th:replace="~{dashboard/fragments/pagination :: companyPagination(${page}, ${page}, 'Page ' + ${page}, ${filterDTO}, ${pageSize})}"></a>
+                            </li>
+                            <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                                <a class="page-link" href="#">...</a>
+                            </li>
+                            <li class="page-item font-weight-bold"
+                                th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                <a th:replace="~{dashboard/fragments/pagination :: companyPagination(${currentPage + 1},'Next', 'Next Page', ${filterDTO}, ${pageSize})}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                <a th:replace="~{dashboard/fragments/pagination :: companyPagination(${totalPages}, '>>', 'Last Page', ${filterDTO}, ${pageSize})}"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Page  End-->
+    </div>
+</div>
+
+
+<!-- Delete company button -->
+<button type="button" id="profileDeleteModalButtonId" class="btn btn-primary" hidden
+        data-toggle="modal" data-target="#profileDeleteModalId">
+    Open modal
+</button>
+<!-- Delete company modal -->
+<div class="modal fade" id="profileDeleteModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Company</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                You want delete company?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/company/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteProfileModalInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/dashboard/profile/profile.js}"></script>
+
+</body>
+</html>

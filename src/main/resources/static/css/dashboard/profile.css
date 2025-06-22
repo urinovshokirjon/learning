@@ -1,0 +1,13 @@
+.profile-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.profile-image-wrapper {
+    width: 15%;
+}
+
+.profile-image-wrapper img {
+    width: 100%;
+}

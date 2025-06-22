@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Picker</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Custom CSS for Date Picker */
+    .datepicker-container {
+      position: relative;
+      display: inline-block;
+    }
+    .datepicker-dropdown {
+      position: absolute;
+      z-index: 9999;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <div class="datepicker-container">
+    <input type="text" class="form-control" id="datepicker-input" placeholder="Select Date" readonly>
+    <div id="datepicker-dropdown" class="datepicker-dropdown d-none"></div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<!-- Custom JS for Date Picker -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const datepickerInput = document.getElementById('datepicker-input');
+    const datepickerDropdown = document.getElementById('datepicker-dropdown');
+    const today = new Date();
+
+    function generateDatepicker() {
+      const currentDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      let html = '<div class="d-flex justify-content-between mb-2">';
+      html += `<button class="btn btn-sm btn-secondary" id="prevMonth">Prev</button>`;
+      html += `<span>${today.toLocaleString('default', { month: 'long' })} ${today.getFullYear()}</span>`;
+      html += `<button class="btn btn-sm btn-secondary" id="nextMonth">Next</button>`;
+      html += '</div>';
+
+      html += '<table class="table table-sm">';
+      html += '<thead><tr>';
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+        html += `<th>${day}</th>`;
+      });
+      html += '</tr></thead>';
+      html += '<tbody><tr>';
+
+      for (let i = 0; i < currentDate.getDay(); i++) {
+        html += '<td></td>';
+      }
+
+      while (currentDate.getMonth() === today.getMonth()) {
+        html += `<td><button class="btn btn-sm btn-light">${currentDate.getDate()}</button></td>`;
+        if (currentDate.getDay() === 6) {
+          html += '</tr><tr>';
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      html += '</tr></tbody></table>';
+      datepickerDropdown.innerHTML = html;
+
+      document.querySelectorAll('.datepicker-dropdown button.btn-light').forEach(button => {
+        button.addEventListener('click', function () {
+          datepickerInput.value = `${today.getFullYear()}-${today.getMonth() + 1}-${this.textContent}`;
+          datepickerDropdown.classList.add('d-none');
+        });
+      });
+
+      document.getElementById('prevMonth').addEventListener('click', function () {
+        today.setMonth(today.getMonth() - 1);
+        generateDatepicker();
+      });
+
+      document.getElementById('nextMonth').addEventListener('click', function () {
+        today.setMonth(today.getMonth() + 1);
+        generateDatepicker();
+      });
+    }
+
+    datepickerInput.addEventListener('click', function () {
+      datepickerDropdown.classList.toggle('d-none');
+      generateDatepicker();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!datepickerDropdown.contains(e.target) && e.target !== datepickerInput) {
+        datepickerDropdown.classList.add('d-none');
+      }
+    });
+  });
+</script>
+</body>
+</html>

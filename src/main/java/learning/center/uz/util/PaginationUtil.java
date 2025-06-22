@@ -1,0 +1,7 @@
+package learning.center.uz.util;
+
+public class PaginationUtil {
+    public static int page(int page) {
+        return page == 0 ? 0 : page - 1;
+    }
+}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="dashboard/../../static/css/admin/profile.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/group.css}"/>
+</head>
+<body>
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Group')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body px-1 pt-1">
+
+            <div class="my-3">
+                <div onclick="goBack()" class="btn btn-primary"> &#x2190</div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="card my-1 mx-4 px-1 col-md-5">
+                    <div class="card-header">
+                        <h3 class="card-title">Group</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p><strong>Group Name:</strong> <span th:text="${group.name}">Group Name</span></p>
+                                <p><strong>Group Start Date:</strong> <span th:text="${group.startDate}">Group Start Date</span></p>
+                                <p><strong>Group Created Date:</strong> <span th:text="${group.createdDate}">Group Created Date</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-1 mx-4 px-1 col-md-5 offset-md-1">
+                    <div class="card-header">
+                        <h3 class="card-title">Teacher</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img th:src="${group.teacherPhotoUrl}" alt="Teacher Photo"
+                                     class="img-fluid img-square"
+                                     style="width: 100px; height: 120px;">
+                            </div>
+                            <div class="col-md-7">
+                                <p><strong>Teacher Name:</strong> <span th:text="${group.teacherName}">Teacher Name</span></p>
+                                <p><strong>Teacher Surname:</strong> <span th:text="${group.teacherSurname}">Teacher Surname</span></p>
+                                <p><strong>Teacher Phone:</strong> <span th:text="${group.teacherPhone}">Teacher Phone</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card my-2">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">Student Group</h3>
+                        <a th:href="@{'/group/go/student-group/add/' + ${group.id}}"
+                           class="btn btn-primary btn-sm" role="button">
+                            <i class="fa fa-plus" aria-hidden="true"></i>Add</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-sm table-bordered">
+                        <thead>
+                        <tr>
+                            <th> Id</th>
+                            <th> Photo</th>
+                            <th> Student F.I.O</th>
+                            <th> Joined Date</th>
+                            <th> Action</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        <tr th:each="student: ${studentList}">
+                            <td th:text="${studentStat.count}"/>
+                            <td class="group-image-wrapper">
+                                <img th:src="${student.photoUrl}" alt="Profile image">
+                            </td>
+                            <td><span th:text="${student.name + ' ' + student.surname}"> Student Full Name </span></td>
+                            <td><span th:text="${student.joinedDate}"> Joined Date</span></td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" role="button" title="Delete Student Group"
+                                        th:data-id="${student.id}"
+                                        onclick="openDeleteStudentGroupModal(this)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- Page  End-->
+    </div>
+</div>
+
+<!-- Delete group button -->
+<button type="button" id="studentGroupDeleteModalButtonId" class="btn btn-primary" hidden
+        data-toggle="modal" data-target="#studentGroupDeleteModalId">
+    Open modal
+</button>
+
+<!-- Delete group modal -->
+<div class="modal fade" id="studentGroupDeleteModalId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Student from Group</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                Do you want to delete student from this group?
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/group/student-group/delete/'+${groupId}}" method="POST">
+                    <input type="text" name="id" id="deleteStudentGroupModalInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/dashboard/studentGroup.js}"></script>
+
+</body>
+</html>

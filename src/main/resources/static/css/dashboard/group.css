@@ -1,0 +1,22 @@
+.group-table-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.group-image-wrapper {
+    width: 120px;
+}
+
+.group-image-wrapper img {
+    width: 100px;
+}
+/*.card {*/
+/*    box-shadow: none; !* Removes the border/shadow around the cards *!*/
+/*    margin-bottom: 10px; !* Adds space at the bottom *!*/
+/*}*/
+
+.row {
+    margin-right: 0; /* Removes extra space on the right side */
+    margin-left: 0;  /* Removes extra space on the left side */
+}

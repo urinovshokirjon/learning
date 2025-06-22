@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">>
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+</head>
+<body>
+<a th:fragment="subjectPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/subject/list?' + 'nameQuery=' + ${filterDTO.nameQuery}  + '&name=' + ${filterDTO.name} + '&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="profilePagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/admin-profile/list?' + 'nameQuery=' + ${filterDTO.nameQuery}  + '&phone=' + ${filterDTO.phone}  + '&role=' + ${filterDTO.role} + '&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="profileCompanyPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/profile/list?' + 'nameQuery=' + ${filterDTO.nameQuery}  + '&phone=' + ${filterDTO.phone}  + '&role=' + ${filterDTO.role} + '&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="companyPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/company/list?' + 'name=' + ${filterDTO.name}  + '&contact=' + ${filterDTO.contact} ++ '&owner=' + ${filterDTO.owner}  + '&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="branchPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/branch/list?' + 'branchName=' + ${filterDTO.branchName}  + '&branchAddress=' + ${filterDTO.branchAddress} + '&branchContact=' + ${filterDTO.branchContact}  + '&branchManagerQuery=' + ${filterDTO.branchManagerQuery}  +'&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="groupPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/group/list?' + 'name=' + ${filterDTO.name}  + '&subject=' + ${filterDTO.subject} + '&teacher=' + ${filterDTO.teacher} +'&page=' + ${page} + '&size=' + ${size}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="lessonPlanPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/lessonPlan/list?' + 'lessonPlanId=' + ${filterDTO.lessonPlanId} + 'lessonPlanName=' + ${filterDTO.lessonPlanName}  + '&subject=' + ${filterDTO.subjectName} + '&createdDate=' + ${filterDTO.createdDate} +'&page=' + ${page} + '&size=' + ${size}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="lessonPlanItemPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/lesson_plan_item/list?' + 'title=' + ${filterDTO.title} + 'description=' + ${filterDTO.description}  + '&orderNumber=' + ${filterDTO.orderNumber} + '&homework=' + ${filterDTO.homework} + '&createdDate=' + ${filterDTO.createdDate} +'&page=' + ${page} + '&size=' + ${size}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="studentPagination(pageNum, label, tooltip, filterDTO, pageSize)" class="page-link"
+   th:href="@{'/student/list?' + 'nameQuery=' + ${filterDTO.nameQuery}  +
+   '&phone=' + ${filterDTO.phone} +
+   '&gender=' + ${filterDTO.gender} +
+   '&page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+
+<a th:fragment="studentGroupPagination(pageNum, label, tooltip, pageSize)" class="page-link"
+   th:href="@{'/student/list?' +
+   'page=' + ${pageNum} + '&size=' + ${pageSize}}"
+   th:title="${tooltip}" rel="tooltip">
+    [[${label}]]
+</a>
+</body>
+</html>

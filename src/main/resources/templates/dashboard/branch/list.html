@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/branch.css}"/>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+                <h1 class="h3 mb-3">Page Title</h1>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header pb-0 px-1 d-flex justify-content-between align-items-center">
+
+                                <form th:action="@{/branch/list}" method="get"
+                                      class="row row-cols-md-auto align-items-end" th:object="${filterDTO}">
+                                    <div class="">
+                                        <label class="form-label" for="nameInput">Name</label>
+                                        <input type="text" name="name" th:field="*{branchName}"
+                                               class="form-control mb-2 me-sm-2" id="nameInput">
+                                    </div>
+                                    <div class="col-12 p-0">
+                                        <label class="form-label" for="addressInput">Address</label>
+                                        <input type="text" name="branchAddress" th:field="*{branchAddress}"
+                                               class="form-control mb-2 me-sm-2" id="addressInput">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label" for="branchContactInput">Contact</label>
+                                        <input type="text" name="branchContact" th:field="*{branchContact}"
+                                               class="form-control mb-2 me-sm-2" id="branchContactInput">
+                                    </div>
+                                    <div class="col-12 p-0">
+                                        <label class="form-label" for="branchManagerQueryInput">Manager name or
+                                            surname</label>
+                                        <input type="text" name="managerQuery" th:field="*{branchManagerQuery}"
+                                               class="form-control mb-2 me-sm-2" id="branchManagerQueryInput">
+                                    </div>
+
+                                    <div class="col-12 px-1">
+                                        <a th:href="@{/branch/list}" type="submit"
+                                           class="btn btn-info mb-2">
+                                            <i class="align-middle" data-feather="x"></i>
+                                        </a>
+                                        <button type="submit" class="btn btn-info mb-2">
+                                            <i class="align-middle" data-feather="search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="align-self-end">
+                                    <a th:href="@{/branch/go/add}" class="btn btn-primary mb-2" role="button">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        Create</a>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2 px-1">
+                                <table class="table table-striped table-sm table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th> Id</th>
+                                        <th> Photo</th>
+                                        <th> Name</th>
+                                        <th> Manager</th>
+                                        <th> Address</th>
+                                        <th> Contact</th>
+                                        <th> Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each=" branch, branchStat : ${branchList}">
+                                        <td th:text="${branchStat.count}"/>
+                                        <td class="branch-image-wrapper">
+                                            <img th:src="${branch.photoUrl}" alt="Branch image"
+                                                 class="img-fluid img-square"
+                                                 style="width: 115px; height: 115px; border: 2px solid #000;">
+                                        </td>
+                                        <td th:text="${branch.branchName}">Name</td>
+                                        <td th:text="${branch.managerStr}">Manager</td>
+                                        <td th:text="${branch.branchAddress}">Address</td>
+                                        <td th:text="${branch.contact}"> Contact</td>
+                                        <td>
+                                            <a th:href="@{'/branch/go/update/'+${branch.id}}"
+                                               class="btn btn-warning btn-sm" role="button"
+                                               aria-pressed="true">
+                                                <i class="align-middle" data-feather="edit-2"></i>
+                                            </a>
+                                            <button class="btn btn-danger btn-sm" role="button" title="Delete Profile"
+                                                    th:data-id="${branch.id}"
+                                                    onclick="openDeleteBranchButton(this)">
+                                                <i class="align-middle" data-feather="trash-2"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <nav aria-label="Pagination" th:if="${totalPages > 0}">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: branchPagination(1, '<<', 'First Page', ${filterDTO}, 2)}"></a>
+                                        </li>
+                                        <li class="page-item font-weight-bold"
+                                            th:classappend="${currentPage == 1} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: branchPagination(${currentPage - 1}, 'Prev', 'Previous Page', ${filterDTO}, ${pageSize})}"></a>
+                                        </li>
+                                        <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+                                            <a class="page-link" href="#">...</a>
+                                        </li>
+                                        <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+                                            th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                                            <a th:replace="~{dashboard/fragments/pagination :: branchPagination(${page}, ${page}, 'Page ' + ${page}, ${filterDTO}, ${pageSize})}"></a>
+                                        </li>
+                                        <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+                                            <a class="page-link" href="#">...</a>
+                                        </li>
+                                        <li class="page-item font-weight-bold"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: branchPagination(${currentPage + 1},'Next', 'Next Page', ${filterDTO}, ${pageSize})}"></a>
+                                        </li>
+                                        <li class="page-item"
+                                            th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                            <a th:replace="~{dashboard/fragments/pagination :: branchPagination(${totalPages}, '>>', 'Last Page', ${filterDTO}, ${pageSize})}"></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+<!-- Delete branch button -->
+<button type="button" class="btn btn-danger" id="branchDeleteModalButtonId"
+        data-bs-toggle="modal" style="display: none;" data-bs-target="#branchDeleteModalId">
+    Open Delete Modal
+</button>
+
+<!-- Delete profile modal -->
+<div class="modal fade" id="branchDeleteModalId" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete Subject</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body m-3">
+                <h3>You want delete Branch?</h3>
+            </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <form th:action="@{'/branch/delete'}" method="POST">
+                    <input type="text" name="id" id="deleteBranchModalInput" hidden>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/dashboard/branch.js}"></script>
+
+</body>
+</html>

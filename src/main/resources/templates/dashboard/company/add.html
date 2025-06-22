@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/profile.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/file_upload.css}"/>
+
+</head>
+<body>
+
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Company')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body p-3">
+            <div onclick="goBack()" class="btn btn-primary"> &#x2190 </div>
+
+            <div class="card with-50 margin-auto">
+                <div class="card-body">
+                    <h1 class="h3 mb-2 text-gray-800">Company Added</h1>
+                    <form method="post"
+                          th:action="${isUpdate} ? @{/company/update/{companyId}(companyId=${company.id})} : @{/company/add}"
+                          th:object="${company}"
+                          enctype="multipart/form-data" autocomplete="off">
+
+                        <br>
+                        <div class="d-flex gap-10">
+                            <div class="flex-grow-1">
+                                <label for="file-upload-input-id">Фото</label>
+                                <div class="form-image-block">
+                                    <img src="" th:src="${company.photoUrl != null ? company.photoUrl : ''}" id="file-upload-img-id" alt="">
+                                </div>
+                                <div class="file-input-wrapper">
+                                    <input type="file" id="file-upload-input-id" name="file" accept="image/*" hidden/>
+                                    <label for="file-upload-input-id">Choose file</label>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class=" pb-2">
+                                    <label for="name">Name:</label>
+                                    <input type="text" id="name" class="form-control" name="name" placeholder="name"
+                                           th:field="*{name}" required>
+                                </div>
+                                <div class=" pb-2">
+                                    <label for="contact">Contact:</label>
+                                    <input type="text" id="contact" class="form-control" name="contact"
+                                           placeholder="contact"
+                                           th:field="*{contact}" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" pb-2">
+                            <label for="name">Owner:</label>
+
+                            <select id="owner_select_id" name="owner" th:field="*{ownerId}" required class="custom-select">
+                                <option selected disabled value="0">...</option>
+                                <option th:each="owner : ${owners}"
+                                        th:value="${owner.id}"
+                                        th:text="${#strings.concat(owner.name,' - ',owner.surname,' - ',' (',owner.phone,')')}"
+                                        th:selected="${owner.id == company.ownerId}">
+                                </option>
+                            </select>
+
+                        </div>
+                        <div class=" ">
+                            <div class="row justify-content-end">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary"
+                                                th:text="${isUpdate ? 'Update': 'Save'}">Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Page  End-->
+    </div>
+</div>
+
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/file_upload.js}"></script>
+<script src="../../../static/js/file_upload.js"></script>
+
+</body>
+</html>

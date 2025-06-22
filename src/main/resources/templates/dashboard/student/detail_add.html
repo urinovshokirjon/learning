@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Detail Add</title>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/side_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/top_bar.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/dashboard/student_group.css}"/>
+    <style>
+        input::placeholder {
+            color: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper d-flex align-items-stretch">
+
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Page Content  -->
+    <div id="content" class="">
+
+        <!-- Topbar -->
+        <div th:replace="~{dashboard/fragments/topbar::topbar('Student Groups')}"></div>
+        <!-- End of Topbar -->
+
+        <!-- Page -->
+        <div class="main_body p-3">
+            <div onclick="goBack()" class="btn btn-primary"> &#x2190 </div>
+            <div class="card with-50 margin-auto">
+                <div class="card-body">
+                    <h1 class="h3 mb-2 text-gray-800">Add New Student Group</h1>
+                    <form method="post"
+                          th:action="@{/student_group/add/{studentId}(studentId=${studentId})}"
+                          th:object="${student}"
+                          enctype="multipart/form-data" autocomplete="off">
+                        <br>
+                        <div class=" pb-2">
+                            <label for="groupId">Groups:</label>
+                            <select id="groupId" name="groups" th:field="*{groupId}" required class="custom-select">
+                                <option th:value="${'NON'}">...</option>
+                                <option th:each="group:${groups}" th:value="${group.id}"
+                                        th:text="${#strings.concat(group.getGroupName(),' - ',group.getTeacherName(),' - ',' (',group.getSubjectName(),')')}"></option>
+                            </select>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-2">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary"
+                                            th:text="${'Save'}">Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Page  End-->
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/popper.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+
+</body>
+</html>

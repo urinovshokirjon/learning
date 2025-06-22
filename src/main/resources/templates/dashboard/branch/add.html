@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BRAIN CRM</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" th:src="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/general_light_style.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/file_upload.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/main.css}"/>
+
+</head>
+<body>
+
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{dashboard/fragments/sidebar2::sidebar}"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Main -->
+    <div class="main">
+        <!-- Navbar -->
+        <footer th:replace="~{dashboard/fragments/navbar::navbar}"></footer>
+        <!-- END Navbar -->
+
+        <!-- Content -->
+        <main class="content p-2">
+            <div class="container-fluid p-0">
+                <div onclick="goBack()" class="btn btn-primary"> &#x2190</div>
+
+                <div class="row justify-content-center">
+                    <div class="col-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="mb-2" th:text="${isUpdate ? 'Edit Branch': 'Add new Branch'}">Branch
+                                    Added</h3>
+
+                                <form method="post"
+                                      th:action="${isUpdate} ? @{/branch/update/{branchId}(branchId=${branch.id})} : @{/branch/add}"
+                                      th:object="${branch}"
+                                      enctype="multipart/form-data" autocomplete="off">
+
+                                    <div class="row">
+                                        <!-- Photo-->
+                                        <div class="col-4">
+                                            <label for="file-upload-input-id">Photo</label>
+                                            <div class="form-image-block">
+                                                <img src="" th:src="${branch.photoUrl != null ? branch.photoUrl : ''}"
+                                                     id="file-upload-img-id" alt="">
+                                            </div>
+                                            <div class="file-input-wrapper">
+                                                <input type="file" id="file-upload-input-id" name="file"
+                                                       accept="image/*"
+                                                       hidden/>
+                                                <label for="file-upload-input-id">Choose file</label>
+                                            </div>
+                                        </div>
+                                        <!-- End Photo-->
+                                        <div class="col-8">
+                                            <div class=" pb-2">
+                                                <label for="name">Name:</label>
+                                                <input type="text" id="name" class="form-control" name="name"
+                                                       placeholder="name"
+                                                       th:field="*{branchName}" required>
+                                            </div>
+                                            <div class=" pb-2">
+                                                <label for="branchAddress">Address:</label>
+                                                <input type="text" id="branchAddress" class="form-control"
+                                                       name="branchAddress"
+                                                       placeholder="surname"
+                                                       th:field="*{branchAddress}" required>
+                                            </div>
+                                            <div class=" pb-2">
+                                                <label for="contact">Contact:</label>
+                                                <input type="text" id="contact" class="form-control"
+                                                       name="branchAddress"
+                                                       placeholder="contact"
+                                                       th:field="*{contact}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-12 mt-2">
+                                            <label class="form-label" for="managerSelectId">Manager</label>
+                                            <select id="managerSelectId" name="regions" th:field="*{managerId}" required
+                                                    class="form-control">
+                                                <option selected disabled value="0">...</option>
+                                                <option th:each="manager : ${managers}"
+                                                        th:value="${manager.id}"
+                                                        th:text="${#strings.concat(manager.name,' - ',manager.surname,' - ',' (',manager.phone,')')}"
+                                                        th:selected="${manager.id == branch.managerId}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- Button  -->
+                                        <div class="col-12 mt-2">
+                                            <div class="d-flex justify-content-end">
+                                                <button type="submit" class="btn btn-primary"
+                                                        th:text="${isUpdate ? 'Update': 'Save'}">Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer th:replace="~{dashboard/fragments/footer::footer}"></footer>
+        <!-- End Footer -->
+    </div>
+    <!-- End Main -->
+</div>
+
+
+<script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/app.js}"></script>
+<script th:src="@{/js/file_upload.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+
+</body>
+</html>

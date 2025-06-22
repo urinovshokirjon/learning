@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Input Styling</title>
+  <style>
+    input[type="date"] {
+      background-color: #f0f0f0;
+      border: 2px solid #4CAF50;
+      color: #333;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    /* Change the font style of the calendar icon */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<label for="date">Choose a date:</label>
+<input type="date" id="date" name="date">
+
+</body>
+</html>
