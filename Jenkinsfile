@@ -1,46 +1,90 @@
 pipeline {
-    agent {
-        label 'java-node'
+  agent { label 'java-node' }
+  environment {
+    REGISTRY = "registry.digitalocean.com/urinovregistry/mygoapp"
+    IMAGE_TAG = "${env.GIT_COMMIT}"
+    SSH_PORT = credentials('ssh_port') // default or optional
+    SSH_HOST = credentials('ssh_host')
+    SSH_USER = credentials('ssh_user')
+    SSH_KEY = credentials('ssh_key') // Jenkins secret (SSH private key)
+    REGISTRY_TOKEN = credentials('registry_token')
+    TELEGRAM_TOKEN = credentials('telegram_bot_token')
+    TELEGRAM_CHAT_ID = credentials('telegram_chat_id')
+  }
+
+  options {
+    timestamps()
+  }
+
+  stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
-
-        stage('Checkout') {
-            steps {
-                echo '📦 Kodni yuklab olayapti...'
-                git 'https://github.com/urinovshokirjon/learning.git'
-            }
+    stage('Test Go App') {
+      steps {
+        dir('mygoapp') {
+          sh '''
+            go mod tidy
+            go test ./...
+          '''
         }
-
-        stage('Build') {
-            steps {
-                echo '🔧 Build boshlangan...'
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo '🧪 Testlar ishlamoqda...'
-                // sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo '🚀 Deploy qilinmoqda...'
-                // Deploy jarayoni: bu joyga kerakli deploy script yoziladi
-                // Masalan: sh './deploy.sh' yoki war faylni nusxalash
-            }
-        }
+      }
     }
 
-    post {
-        success {
-            echo '✅ Pipeline muvaffaqiyatli yakunlandi!'
+    stage('Build & Push Docker Image') {
+      steps {
+        dir('mygoapp') {
+          sh '''
+            echo "$REGISTRY_TOKEN" | docker login registry.digitalocean.com -u paulbundy07@gmail.com --password-stdin
+            docker build -t $REGISTRY:$IMAGE_TAG .
+            docker push $REGISTRY:$IMAGE_TAG
+          '''
         }
-        failure {
-            echo '❌ Pipeline bajarilmadi!'
-        }
+      }
     }
+
+    stage('Deploy to Remote') {
+      steps {
+        sshagent (credentials: ['ssh_key']) {
+          sh '''
+            scp -P ${SSH_PORT} -r mygoapp/deploy/* ${SSH_USER}@${SSH_HOST}:/opt/mygoapp/
+
+            ssh -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} << EOF
+              set -e
+              cd /opt/mygoapp/
+              echo "$REGISTRY_TOKEN" | docker login registry.digitalocean.com -u paulbundy07@gmail.com --password-stdin
+              yq -i '.services.app.image = "${REGISTRY}:${IMAGE_TAG}"' docker-compose.yaml
+              docker compose up -d --remove-orphans
+EOF
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      script {
+        sh '''
+          curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \\
+            -d chat_id=${TELEGRAM_CHAT_ID} \\
+            -d text="✅ Jenkins: mygoapp deployed successfully. Commit: ${GIT_COMMIT}"
+        '''
+      }
+    }
+
+    failure {
+      script {
+        sh '''
+          curl -s -X POST https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage \\
+            -d chat_id=${TELEGRAM_CHAT_ID} \\
+            -d text="❌ Jenkins: mygoapp deployment FAILED. Check logs. Commit: ${GIT_COMMIT}"
+        '''
+      }
+    }
+  }
 }
