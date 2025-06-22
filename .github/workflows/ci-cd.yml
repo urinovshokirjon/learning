@@ -1,4 +1,4 @@
-name: deploy app to server
+name: Deploy Java App to Server
 
 on:
   push:
@@ -11,32 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: git clone
+      - name: 📥 Clone the repository
         uses: actions/checkout@v4
 
-      - name: build jar file
-        working-directory: ./my-java-app
-        run: mvn clean package
+      - name: ⚙️ Build JAR with Maven
+        run: mvn clean package -DskipTests
 
-      - name: uzgartirish
+      - name: 📁 Rename JAR file to app.jar
         run: |
-          mv ./my-java-app/*.jar app.jar
+          mkdir -p deploy
+          cp target/*.jar deploy/app.jar
 
-      - name: copy files via SSH
+      - name: 🚀 Copy JAR file to Remote Server via SCP
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "./my-java-app"
-          target: /opt/java-app/
+          source: "./deploy/app.jar"
+          target: "/opt/java-app/"
 
-      - name: Execute remote SSH commands using key
+      - name: 🛠 Restart systemd service on Remote Server
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: sudo systemctl restart app.service
+          script: |
+            sudo systemctl stop app || true
+            sudo systemctl start app
