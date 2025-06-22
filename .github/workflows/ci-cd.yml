@@ -1,50 +1,50 @@
-name: Deploy Java App to Server
-
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Clone the repository
-        uses: actions/checkout@v4
-
-      - name: ⚙️ Build JAR with Maven
-        run: mvn clean package -DskipTests
-
-      - name: 📁 Rename JAR file to app.jar
-        run: |
-          mkdir -p deploy
-          cp target/*.jar deploy/app.jar
-
-      - name: 🚀 Copy JAR file to Remote Server via SCP
-        uses: appleboy/scp-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "./deploy/app.jar"
-          target: "/opt/java-app/"
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🛠 Restart systemd service on Remote Server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            sudo systemctl stop app || true
-            sudo systemctl start app
-            
-            
+#name: Deploy Java App to Server
+#
+#on:
+#  push:
+#    branches:
+#      - master
+#  workflow_dispatch:
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: 📥 Clone the repository
+#        uses: actions/checkout@v4
+#
+#      - name: ⚙️ Build JAR with Maven
+#        run: mvn clean package -DskipTests
+#
+#      - name: 📁 Rename JAR file to app.jar
+#        run: |
+#          mkdir -p deploy
+#          cp target/*.jar deploy/app.jar
+#
+#      - name: 🚀 Copy JAR file to Remote Server via SCP
+#        uses: appleboy/scp-action@v1
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          key: ${{ secrets.SSH_KEY }}
+#          port: ${{ secrets.SSH_PORT }}
+#          source: "./deploy/app.jar"
+#          target: "/opt/java-app/"
+#
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: 🛠 Restart systemd service on Remote Server
+#        uses: appleboy/ssh-action@v1
+#        with:
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USERNAME }}
+#          key: ${{ secrets.SSH_KEY }}
+#          port: ${{ secrets.SSH_PORT }}
+#          script: |
+#            sudo systemctl stop app || true
+#            sudo systemctl start app
+#
+#

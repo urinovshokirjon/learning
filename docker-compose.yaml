@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: learning_center_db
+      POSTGRES_USER: learn
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  java-app:
+    build:
+      context: .
+    container_name: java-app
+    depends_on:
+      - postgres-db
+    environment:
+      DB_HOST: postgres-db
+      DB_PORT: 5432
+      DB_NAME: learning_center_db
+      DB_USER: learn
+      DB_PASSWORD: 12345
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+networks:
+  app-network:
