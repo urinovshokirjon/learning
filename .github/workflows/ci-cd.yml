@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,9 @@ jobs:
           source: "./deploy/app.jar"
           target: "/opt/java-app/"
 
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: 🛠 Restart systemd service on Remote Server
         uses: appleboy/ssh-action@v1
         with:
