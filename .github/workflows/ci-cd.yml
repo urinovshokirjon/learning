@@ -1,0 +1,42 @@
+name: deploy app to server
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: git clone
+        uses: actions/checkout@v4
+
+      - name: build jar file
+        working-directory: ./my-java-app
+        run: mvn clean package
+
+      - name: uzgartirish
+        run: |
+          mv ./my-java-app/*.jar app.jar
+
+      - name: copy files via SSH
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./my-java-app"
+          target: /opt/java-app/
+
+      - name: Execute remote SSH commands using key
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: sudo systemctl restart app.service
